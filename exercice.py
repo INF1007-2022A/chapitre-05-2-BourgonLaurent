@@ -30,8 +30,46 @@ def get_bill(name: str, data: list[tuple[str, int, float]]):
     return "\n".join([items[0] + items[1] for items in to_display])
 
 
-def format_number(number, num_decimal_digits):
-    return ""
+def format_number(number: float, num_decimal_digits: int) -> str:
+    rounded_number = abs(round(number, num_decimal_digits))
+
+    ## Split string
+    # same thing as
+    # whole_part, dec_part = str.split(".")
+    whole_part = str()
+    dec_part = str()
+    whole_mode = True
+    for num in str(rounded_number):
+        if num == ".":
+            whole_mode = False
+            continue
+
+        if whole_mode:
+            whole_part += num
+        else:
+            dec_part += num
+
+    ## Pad decimals if the last ones were 0
+    # same thing as
+    # dec_part.zfill(num_decimal_digits)
+    dec_part += "0" * (num_decimal_digits - len(dec_part))
+
+    ## Add spaces
+
+    # For whole part,
+    # single values are on the left `N NNN.`
+    whole_part_fmt = str()
+    for i, num in enumerate(reversed(whole_part)):
+        whole_part_fmt = num + (" " if i % 3 == 0 and i != 0 else "") + whole_part_fmt
+
+    # For decimal part,
+    # single valeus are on the right `.NNN N`
+    dec_part_fmt = str()
+    for i, num in enumerate(dec_part):
+        dec_part_fmt += (" " if i % 3 == 0 and i != 0 else "") + num
+
+    # Add back neg sign if input number was neg
+    return ("-" if number < 0 else "") + whole_part_fmt + "." + dec_part_fmt
 
 
 def get_triangle(num_rows):
