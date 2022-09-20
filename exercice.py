@@ -72,8 +72,22 @@ def format_number(number: float, num_decimal_digits: int) -> str:
     return ("-" if number < 0 else "") + whole_part_fmt + "." + dec_part_fmt
 
 
-def get_triangle(num_rows):
-    return ""
+def get_triangle(num_rows: int):
+    rows: list[str] = []
+    for i in range(1, num_rows + 1):
+        rows.append("A" * (2 * i - 1))
+
+    to_add = len(rows[-1])
+
+    for i, row in enumerate(rows):
+        rows[i] = "+" + f"{row:^{to_add}}" + "+"
+
+    h_border = "+" * (to_add + 2)
+
+    rows.insert(0, h_border)
+    rows.append(h_border)
+
+    return "\n".join(rows)
 
 
 if __name__ == "__main__":
